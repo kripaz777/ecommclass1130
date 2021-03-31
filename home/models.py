@@ -2,6 +2,7 @@ from django.db import models
 STATUS = (('active','active'),('passive','passive'))
 LABEL = (('new','new'),('hot','hot'),('sale','sale'),('','default'))
 # Create your models here.
+from django.urls import reverse
 class Category(models.Model):
     name = models.CharField(max_length =200)
     image = models.CharField(max_length = 200)
@@ -48,4 +49,5 @@ class Item(models.Model):
 
     def __str__(self):
         return self.title
-
+    def get_item_url(self):
+        return reverse("home:products",kwargs = {'slug':self.slug})
