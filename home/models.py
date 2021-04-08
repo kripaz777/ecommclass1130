@@ -64,3 +64,16 @@ class Contact(models.Model):
 
     def __str__(self):
         return self.name
+
+class Review(models.Model):
+    username = models.CharField(max_length = 300,blank = True)
+    email = models.EmailField(max_length = 300,blank = True)
+    review = models.TextField(blank = True)
+    rating = models.IntegerField()
+    date = models.DateTimeField(auto_now_add = True)
+    slug = models.CharField(max_length = 200,blank = True)
+    status = models.CharField(choices=STATUS, max_length=200)
+
+    def __str__(self):
+        return self.username
+

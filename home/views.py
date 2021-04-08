@@ -39,7 +39,26 @@ class ItemDetailView(BaseView):
 
         cat = Item.objects.get(slug = slug).category_id
         self.views['catitems'] = Item.objects.filter(category = cat)
+        self.views['reviews'] = Review.objects.filter(slug= slug)
         return render(request,'product-detail.html',self.views)
+
+def review(request):
+    if request.method == 'POST':
+        rating = request.POST['rating']
+        review = request.POST['review']
+        slug = request.POST['slug']
+        username = request.user.username
+        email = request.user.email
+
+        user_review = Review.objects.create(
+            rating = rating,
+            review = review,
+            username = username,
+            email = email,
+            slug = slug
+        )
+        user_review.save()
+        return redirect(f'/products/{slug}')
 
 class CategoryView(BaseView):
     def get(self,request,slug):
