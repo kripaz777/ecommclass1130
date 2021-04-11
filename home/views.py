@@ -158,6 +158,8 @@ def delete_single_cart(request,slug):
     if Cart.objects.filter(slug=slug).exists():
         username = request.user.username
         quantity = Cart.objects.get(username=user, slug=slug, checkout=False).quantity
+        price = Item.objects.get(slug=slug).price
+        discounted_price = Item.objects.get(slug=slug).discounted_price
         qty = quantity - 1
         if discounted_price > 0:
             actual_total = discounted_price*qty
