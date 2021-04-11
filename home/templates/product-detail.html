@@ -77,8 +77,8 @@
                                             </div> 
                                         </div>
                                         <div class="action">
-                                            <a class="btn" href="#"><i class="fa fa-shopping-cart"></i>Add to Cart</a>
-                                            <a class="btn" href="#"><i class="fa fa-shopping-bag"></i>Buy Now</a>
+                                            <a class="btn" href="{{product.get_cart_url}}"><i class="fa fa-shopping-cart"></i>Add to Cart</a>
+
                                         </div>
                                     </div>
                                 </div>
@@ -117,8 +117,9 @@
                                         <div class="reviews-submitted">
                                             <div class="reviewer">{{review.username}} <span>{{review.date}}</span></div>
                                             <div class="ratting">
-                                                {% for i in x|ljust:review.rating %}
-                                                <i class="fa fa-star"></i>
+                                                {% for i in "x"|ljust:review.rating %}
+<!--                                                <i class="fa fa-star"></i>-->
+                                                <p>Hello world</p>
                                                 {% endfor %}
                                             </div>
                                             <p>

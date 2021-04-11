@@ -111,3 +111,57 @@ def signup(request):
 
     return render(request, 'signup.html')
 
+def cart(request,slug):
+    user = request.user.username
+    price = Item.objects.get(slug=slug).price
+    discounted_price = Item.objects.get(slug=slug).discounted_price
+
+    if Cart.objects.filter(slug = slug).exists():
+        quantity = Cart.objects.get(username=user, slug=slug, checkout=False).quantity
+        qty = quantity + 1
+        if discounted_price > 0:
+            actual_total = discounted_price*qty
+        else:
+            actual_total = price*qty
+
+        Cart.objects.filter(username=user, slug=slug, checkout=False).update(quantity = qty,total =actual_total)
+        return redirect("home:my_cart")
+    else:
+        if discounted_price > 0:
+            actual_total = discounted_price
+        else:
+            actual_total = price
+
+        data = Cart.objects.create(
+            username = user,
+            slug = slug,
+            total = actual_total,
+            items = Item.objects.filter(slug = slug)[0]
+        )
+        data.save()
+        return redirect("home:my_cart")
+
+class CartView(BaseView):
+    def get(self,request):
+        user = request.user.username
+        self.views["cart_product"] = Cart.objects.filter(username = user,checkout=False)
+
+        return render(request,"cart.html",self.views)
+
+def delete_cart(request,slug):
+    if Cart.objects.filter(slug=slug).exists():
+        username = request.user.username
+        Cart.objects.filter(username=username, slug=slug, checkout=False).delete()
+    return redirect("home:my_cart")
+
+def delete_single_cart(request,slug):
+    if Cart.objects.filter(slug=slug).exists():
+        username = request.user.username
+        quantity = Cart.objects.get(username=user, slug=slug, checkout=False).quantity
+        qty = quantity - 1
+        if discounted_price > 0:
+            actual_total = discounted_price*qty
+        else:
+            actual_total = price*qty
+        Cart.objects.filter(username=username, slug=slug, checkout=False).update(quantity = qty,total = actual_total)
+    return redirect("home:my_cart")

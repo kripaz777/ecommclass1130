@@ -55,6 +55,8 @@ class Item(models.Model):
         return self.title
     def get_item_url(self):
         return reverse("home:products",kwargs = {'slug':self.slug})
+    def get_cart_url(self):
+        return reverse("home:cart",kwargs = {'slug':self.slug})
 
 class Contact(models.Model):
     name = models.CharField(max_length = 300)
@@ -77,3 +79,14 @@ class Review(models.Model):
     def __str__(self):
         return self.username
 
+
+class Cart(models.Model):
+    username = models.CharField(max_length = 300)
+    slug = models.CharField(max_length = 300)
+    items = models.ForeignKey(Item,on_delete=models.CASCADE)
+    quantity = models.IntegerField(default = 1)
+    total = models.IntegerField(default = 0)
+    checkout = models.BooleanField(default = False)
+
+    def __str__(self):
+        return self.username
