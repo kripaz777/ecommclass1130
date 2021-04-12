@@ -167,3 +167,26 @@ def delete_single_cart(request,slug):
             actual_total = price*qty
         Cart.objects.filter(username=username, slug=slug, checkout=False).update(quantity = qty,total = actual_total)
     return redirect("home:my_cart")
+
+
+# -------------------------------API----------------------------------
+from rest_framework import viewsets
+from django_filters.rest_framework import DjangoFilterBackend
+import django_filters.rest_framework
+from django.contrib.auth.models import User
+from .serializers import ItemSerializers
+from rest_framework import generics
+from .serializers import *
+
+class ItemViewSet(viewsets.ModelViewSet):
+    queryset = Item.objects.all()
+    serializer_class = ItemSerializers
+
+from rest_framework.filters import OrderingFilter,SearchFilter
+class ItemListView(generics.ListAPIView):
+    queryset = Item.objects.all()
+    serializer_class = ItemSerializers
+    filter_backends = [DjangoFilterBackend,OrderingFilter,SearchFilter]
+    filter_fields = ["id","category","label","brand"]
+    ordering_fields = ["id","price","title"]
+    search_fields = ["title","description"]
